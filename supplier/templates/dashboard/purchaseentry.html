@@ -1,0 +1,871 @@
+  {% extends 'dashboard/base.html' %}
+{% block head %}
+  <title>purchase from Supplier</title>
+{% endblock %}
+
+ {% block body %}
+      <!-- Main Content -->
+      <div class="main-content" >
+        <section class="section">
+          <div class="section-body">
+            <div class="row">
+              <div class="col-12 col-md-12 col-lg-12">
+
+      
+                <div class="card">
+                  <div class="card-header">
+                    <h4 style="color: #fc544b">Material Purchase</h4>
+                  </div>
+                  <div class="card-body">
+
+  <div class="row" >
+                 <div class="col-12 col-md-4">
+                         
+                           <label>From Date</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fa fa-pencil-square-o"></i>
+                          </div>
+                        </div>
+                             <input type="date"  class="form-control" name="purchasedate" id="fromdate" v-model="from_date">
+                      </div>
+                       
+                        </div>
+
+                                       <div class="col-12 col-md-4">
+                        
+                           <label>To Date</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fa fa-pencil-square-o"></i>
+                          </div>
+                        </div>
+                             <input type="date"  class="form-control" name="todate" id="todate" v-model="to_date">
+                      </div>
+                       
+                        </div>  
+
+
+                                       <div class="col-12 col-md-4">
+                         <label style="color: transparent;">To Date</label><br>
+                             <button type="button" class="btn btn-primary"  @click="purchaseview()"><i class="fa fa-search"></i> Search</button>
+                  
+                       
+                        </div> 
+
+  </div>
+<div class="row" >
+                        <div class="col-12 col-md-12" >
+                          <button type="button" style="float: right"  class="btn btn-warning" v-on:click="addsup"><i class="fa fa-plus-square"></i> Add More</button>
+     <div class="table-responsive">
+      
+                      <table id="example1"  class="table table-bordered table-md example">
+                        <thead>
+                        <tr>
+                          <th>S.No.</th>
+                          <th>Purchase No.</th>
+                          <th>Purchase Date</th>
+                          
+                          <th>Supplier</th>
+
+                          <th>Contact</th>
+
+                          <th>Supplier Address</th>
+                         
+                         
+                          
+                          <th>Action</th>
+
+                        
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr v-for="(sup,i) in materialview">
+                         
+                         <td>${ i+1 }$</td>
+                          <td>${ sup.purchaseno }$</td>
+                          <td>${ sup.purchasedate }$</td>
+                         <td>${ sup.suppliername }$</td>
+                           <td>${ sup.suppliercontact }$</td>
+                             <td>${ sup.supplieraddress }$</td>
+                             
+                         
+                          
+                          <td><a type="button"  class="btn btn-success bt"  @click="editData1(sup.purchaseno+'/'+sup.purchasedate)" title="view"><i class="fa fa-eye" style="color:#fff"></i></a>
+                            <a type="button"  class="btn btn-danger"  @click="deleteData1(sup.purchaseno+'/'+sup.purchasedate)"><i class="fa fa-trash" style="color:#fff"></i></a></td>
+                        </tr>
+                        </tbody> 
+                        
+                      </table>
+                     
+                    </div>
+</div>
+</div>
+
+                  </div>
+                </div>
+               
+              </div>
+     
+            </div>
+          </div>
+        </section>
+
+
+                           <!----------------------model start---------------------->
+                   <div class="modal fade" data-backdrop='static' data-keyboard='false' id="myModal1">
+    <div class="modal-dialog" width="890px">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title" style="color:red;text-align:center">Material Purchase</h4>
+        
+        </div>
+          <div class="modal-body">
+                   <validation-observer v-slot="{ invalid, handleSubmit }">
+                    <form ref="anyform" @submit.prevent="handleSubmit(addsubmitData)">
+                       {% csrf_token %}  {% load widget_tweaks %}
+                    <div class="form-group">
+                     
+                      <div class="row " >
+
+ <input type="hidden"  class="form-control" id="" v-model="id">
+ <input type="hidden"   name="status" id="status" v-model="status">
+
+                   <div class="col-12 col-md-4">
+                           <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>Purchase No.</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fa fa-pencil-square-o"></i>
+                          </div>
+                        </div>
+                            <input type="number" v-bind:readonly="isReadOnly"  class="form-control" name="purchaseno" id="purchaseno" v-model="purchaseno">
+                      </div>
+                        <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                    </div>
+
+                      <div class="col-12 col-md-4">
+                           <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>Purchase Date</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fa fa-pencil-square-o"></i>
+                          </div>
+                        </div>
+                             <input type="date"  class="form-control" name="purchasedate" id="purchasedate" v-model="purchasedate">
+                      </div>
+                        <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                     </div>
+
+
+                        <div class="col-12 col-md-4">
+                           <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>Supplier</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fa fa-pencil-square-o"></i>
+                          </div>
+                        </div>
+                           <select  class="form-control" name="supplier" id="supplier" v-model="supplier">
+                           <option value="" disabled="">Select Supplier</option>
+
+                          <option v-for="view in suppliereach" v-bind:value="view.pk"   >${view.fields.company}$-${view.fields.name}$</option>
+                        </select>
+                      </div>
+                        <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                        </div>
+
+
+                     
+                          <div class="col-12 col-md-4">
+                           <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>Material Type</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fa fa-pencil-square-o"></i>
+                          </div>
+                        </div>
+                          <select  class="form-control" name="materialtype" id="materialtype" v-model="materialtype" @change="materialchange($event)" >
+                           <option value="" disabled="">Select Material</option>
+                             <option v-for="view in materialeach" v-bind:value="view.fid"   >${view.materialchild}$ </option>
+
+                         
+                        </select>
+                      </div>
+                        <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                        </div>
+
+
+     <div class="col-12 col-md-4" v-if="iscount">
+                           <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>${btnText}$</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fa fa-pencil-square-o"></i>
+                          </div>
+                        </div>
+                        <input type="number"  class="form-control" name="count" id="count" v-model="count">
+                      </div>
+                        <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                        </div>
+
+                             <div class="col-12 col-md-4" v-if="isshade">
+                           <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>${NumberText}$</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fa fa-pencil-square-o"></i>
+                          </div>
+                        </div>
+                        <input type="text"  class="form-control" name="colorshade" id="color shade" v-model="colorshade">
+                      </div>
+                        <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                        </div>
+
+                         <div class="col-12 col-md-4" v-if="iscrossweight">
+                           <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>Gross Weight</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fa fa-pencil-square-o"></i>
+                          </div>
+                        </div>
+                        <input type="number"  class="form-control" name="grossweight" id="Gross Weight" v-model="grossweight">
+                      </div>
+                        <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                        </div>
+                               <div class="col-12 col-md-4">
+                           <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>Net Weight</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fa fa-pencil-square-o"></i>
+                          </div>
+                        </div>
+                        <input type="number"  class="form-control" name="netweight" id="Net Weight" v-model="netweight">
+                      </div>
+                        <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                        </div>
+                            <div class="col-12 col-md-4" v-if="isbags">
+                           <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>No.of Bags</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fa fa-pencil-square-o"></i>
+                          </div>
+                        </div>
+                        <input type="number"  class="form-control" name="bags" id="bags" v-model="bags">
+                      </div>
+                        <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                        </div>
+
+
+                              <div class="col-12 col-md-4" v-if="iscones">
+                           <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>No.of Cones</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fa fa-pencil-square-o"></i>
+                          </div>
+                        </div>
+                        <input type="number"  class="form-control" name="cones" id="cones" v-model="cones">
+                      </div>
+                        <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                        </div>
+
+                               <div class="col-12 col-md-4" v-if="istip">
+                           <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>Tip (Colour Shade)</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fa fa-pencil-square-o"></i>
+                          </div>
+                        </div>
+                        <input type="text"  class="form-control" name="tip" id="tip" v-model="tip">
+                      </div>
+                        <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                        </div>
+
+                        
+                      </div>
+
+                       <div class="row">
+
+                        <div class="col-12 col-md-10">
+                        </div>
+                         <div class="col-12 col-md-2">
+                               <button type="button" class="btn btn-danger" @click="close()"><i class="fa fa-power-off"></i> Close</button>
+          <button type="submit" v-bind:disabled="invalid" v-if="add "class="btn btn-primary" ><i class="fa fa-plus-circle"></i> Add</button>
+          <button type="submit" v-bind:disabled="invalid" v-if="update "class="btn btn-primary" ><i class="fa fa-plus-circle"></i> Update</button>
+                         </div>
+
+                       </div>
+
+                      <div class="row">
+                         <div class="col-12 col-md-12" >
+                         <div class="table-responsive">
+      
+                      <table id="example" v-if="table"  class="table table-bordered table-md example">
+                        <thead>
+                        <tr>
+                          
+                          <th>MaterialType</th>
+                          <th>Count</th>
+                          <th>Net Weight</th>
+                          <th>Gross Weight</th>
+                          <th>No.of Bags</th>
+                          <th>Action</th>
+
+                        
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr v-for="sup in materialeachview">
+                         
+                          <td>${ sup.materialtype }$</td>
+                          <td>${ sup.count }$</td>
+                         <td>${ sup.net_weight }$</td>
+                          <td>${ sup.gross_weight }$</td>
+                          <td>${ sup.no_of_bags }$</td>
+                          
+                          <td><a type="button"  class="btn btn-primary bt"  @click="editData(sup.fid)"><i class="fa fa-pencil" style="color:#fff"></i></a>
+                            <a type="button"  class="btn btn-danger"  @click="deleteData(sup.fid)"><i class="fa fa-trash" style="color:#fff"></i></a></td>
+                        </tr>
+                        </tbody> 
+                        
+                      </table>
+                     
+                    </div>
+                  </div>
+
+                      </div>
+                     
+
+
+                    </div>
+                       <div class="modal-footer">
+    
+        </div>
+                  </form>
+                </validation-observer>
+              </div>
+                 </div>
+    </div>
+  </div><!-------------------model close------------------------------------------>
+
+      </div>
+
+       {% endblock %}
+
+
+         {% block foot %}
+         <script>
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'X-CSRFToken'
+</script>
+         <script>
+var app = new Vue({
+  delimiters: ['${', '}$'],
+  el: '#app',
+  data: {
+     id:'',
+    
+     supplier:'',
+     count:'',
+     from_date:new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().substr(0,10),
+     to_date:new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).toISOString().substr(0,10),
+     purchasedate:new Date().toISOString().substr(0, 10),
+     purchaseno:1,
+     materialtype:'',
+     grossweight:'',
+     netweight:'',
+     bags:'',
+     cones:'',
+     colorshade:'',
+     tip:'',
+     suppliereach:[],
+     materialview:[],
+     materialeachview:[],
+     materialeach:[],
+     btnText:'Count',
+     NumberText:'Color Shade&Number',
+     status:0,
+      add:true,
+      isReadOnly:true,
+      iscones:true,
+      iscount:true,
+      isshade:true,
+      isbags:true,
+      iscrossweight:true,
+      istip:true,
+      update:false,
+      table:false,
+      
+
+  },
+  mounted: function () {
+ 
+   this.purchaseview();
+   this.getsuppliers();
+   this.getmaterial();
+   this.getpurchaseno();
+   
+
+  },
+
+  methods: {
+
+
+         myTable(){
+        $(document).ready( function () {
+              
+              $('#example').DataTable({
+      
+      dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ],
+        "scrollY":        "500px",
+        "scrollCollapse": true,
+        "retrieve": true,
+        "paging":         false
+    });
+              
+              $('#example1').DataTable({
+      
+      dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ],
+        "scrollY":        "500px",
+        "scrollCollapse": true,
+        "retrieve": true,
+        "paging":         false
+    });
+          });
+      },
+
+      
+purchaseview:function()
+{
+  fromdate=$('#fromdate').val();
+  todate=$('#todate').val();
+   axios.get('/getpurchaseview/'+fromdate+'/'+todate+'', {
+
+
+     
+     }).then(function(response){
+//
+//alert(JSON.stringify(response.data));
+     app.materialview = response.data;
+     app.myTable();
+     //app.resetform();
+      
+     });
+  
+},
+
+ 
+ materialchange:function(event)
+{
+
+   var val=event.target.value;
+
+      app.iscones=false;
+      app.isshade=false;
+      app.isbags=false;
+      app.iscrossweight=false;
+      app.istip=false;
+      app.btnText='Count';
+  
+  switch(val){
+
+   case '10':
+     app.isbags=true;app.istip=true;app.iscrossweight=true;
+    break;
+   case '9':
+     app.isbags=true;app.iscones=true;app.istip=true;app.iscrossweight=true;
+    break;
+  case '1':
+    app.iscones=true;app.isshade=true;
+    break;
+   case '2':
+    app.iscones=true;app.isshade=true;
+    break;
+    case '3':
+    app.iscones=true;app.isshade=true;
+    break;
+    case '4':
+    app.iscrossweight=true;app.btnText='No.of Bobbin';
+    break;
+    case '5':
+    app.iscrossweight=true;app.btnText='No.of Bobbin';
+    break; 
+    case '8':
+    app.NumberText='Bobbin No.';app.isshade=true;app.iscount=false;
+    break;
+     case '7':
+    app.NumberText='Beam No.';app.isshade=true;app.iscount=false;
+    break;  
+
+
+  }
+  
+   
+},
+close()
+{
+  $('#myModal1').modal('hide');
+  app.purchaseview();
+},
+            addsup:function(){
+      app.getpurchaseno();
+      $('#myModal1').modal('show');
+   app.status=0;
+   app.id='';
+   app.materialeachview=[];
+   
+    },
+
+
+         getsuppliers: function(){
+
+ axios.get('/getsupplier', {
+     
+     }).then(function(response){
+//
+
+     app.suppliereach = response.data;
+     //app.myTable();
+     //app.resetform();
+      
+     });
+  
+    },
+
+
+         getpurchaseno: function(){
+
+ axios.get('/getpurchaseno', {
+     
+     }).then(function(response){
+
+      //alert(response.data.purchaseno);
+//
+response.data.purchaseno == null ? app.purchaseno=1 : app.purchaseno=response.data.purchaseno+1;
+
+
+app.purchasedate=new Date().toISOString().substr(0, 10);
+ 
+     //app.myTable();
+     //app.resetform();
+      
+     });
+  
+    },
+
+
+  
+
+     getmaterial: function(){
+
+ axios.get('/getmaterial', {
+     
+     }).then(function(response){
+//
+
+     app.materialeach = response.data;
+ 
+     });
+  
+    },
+
+
+
+    addsubmitData:function(){
+if(app.id=='')
+{
+url='/addmaterialpurchase/';
+msg="Added Successfully";
+}
+else
+{
+ url='/updatematerialpurchase/';
+  msg="Update Successfully";
+}
+
+//alert(app.cones);
+
+ axios.post(url,{
+     
+     supplier:app.supplier,
+     count:app.count,
+     purchasedate:app.purchasedate,
+     purchaseno:app.purchaseno,
+     idc:app.id,
+     materialtype:app.materialtype,
+     grossweight:app.grossweight,
+     netweight:app.netweight,
+     bags:app.bags,
+     cones:app.cones,
+     colorshade:app.colorshade,
+     tip:app.tip,
+     status:app.status
+
+         
+      
+       }).then(function(response){
+
+        //alert(JSON.stringify(response));
+        app.purchaseno=response.data.tno;
+        app.status=1;
+         app.getmaterialpurchase(response.data.tno+'/'+response.data.purchasedate);
+
+         if(app.id!='')
+         {
+        swal(msg, "", "success");
+         app.add=true;
+         app.update=false;
+         app.id='';
+        } 
+
+    
+
+       }).catch(err => {
+    // what now?
+    console.log(err);
+})
+     },
+
+     deleteData:function(id){
+  
+
+swal({
+  title: "Are you sure?",
+  text: "Once deleted, you will not be able to recover this",
+  icon: "warning",
+  buttons: true,
+  dangerMode: true,
+})
+.then((willDelete) => {
+  if (willDelete) {
+       axios.post('/deletematerialpurchase/'+id+'', {
+      
+     
+     }).then(function(response){
+   swal("Deleted Successfully", "", "success");   
+    app.getmaterialpurchase(app.purchaseno+'/'+app.purchasedate);
+     });
+  } else {
+    
+  }
+});
+
+
+
+
+
+
+},
+
+ deleteData1:function(id){
+  var arr=id.split('/');
+
+
+swal({
+  title: "Are you sure?",
+  text: "Once deleted, you will not be able to recover this",
+  icon: "warning",
+  buttons: true,
+  dangerMode: true,
+})
+.then((willDelete) => {
+  if (willDelete) {
+       axios.post('/deletematerialpurchasemodel/', {
+      purchaseno:arr[0],
+        purchasedate:arr[1],
+     
+     }).then(function(response){
+   swal("Deleted Successfully", "", "success");   
+    app.purchaseview();
+     });
+  } else {
+    
+  }
+});
+
+  },
+editData1:function(id){
+  $('#myModal1').modal('show');
+
+ var arr=id.split('/');
+// purchaseid=arr[0];
+// purchasedate=arr[1];
+      axios.post('/getmaterialpurchasemodel/', {
+        purchaseno:arr[0],
+        purchasedate:arr[1],
+     
+     }).then(function(response){
+//
+       var yourString=JSON.stringify(response.data);
+
+      var result = yourString.slice(1,-1);
+
+      var obj = JSON.parse(result);
+
+     //app.materialeachview = response.data;
+     app.supplier=obj["supplier"]
+    
+     app.status=1;
+     app.purchaseno=arr[0];
+     app.purchasedate=arr[1];
+     app.getmaterialpurchase(arr[0]+'/'+arr[1]);
+     
+     app.table=true;
+ 
+     });
+},
+
+editData:function(id){
+  
+     axios.post('/editmaterialpurchase/'+id+'', {
+      
+     
+     }).then(function(response){
+
+
+      
+       var yourString=JSON.stringify(response.data);
+
+      var result = yourString.slice(1,-1);
+
+      var obj = JSON.parse(result);
+
+   //alert(obj["pk"]);
+      app.id= obj["pk"];
+      app.material=obj["fields"]["material"];
+      app.count=obj["fields"]["count"];
+      app.grossweight=obj["fields"]["gross_weight"];
+      app.netweight=obj["fields"]["net_weight"];
+      app.bags=obj["fields"]["no_of_bags"];
+      app.cones=obj["fields"]["number_of_cones"];
+      app.colorshade=obj["fields"]["color_shadeandnumber"];
+    // Define recursive function to print nested values
+    //alert(app.material);
+      app.editmaterial(app.material);
+      app.add=false;
+      app.update=true;
+     
+
+
+     });
+
+},
+
+
+
+editmaterial:function(i){
+
+  var val=i;
+   app.iscones=false;
+      app.isshade=false;
+      app.isbags=false;
+      app.iscrossweight=false;
+      app.istip=false;
+      app.btnText='Count';
+  
+  switch(val){
+
+   case 10:
+     app.isbags=true;app.istip=true;app.iscrossweight=true;
+    break;
+   case 9:
+     app.isbags=true;app.iscones=true;app.istip=true;app.iscrossweight=true;
+    break;
+   case 1:
+    app.iscones=true;app.isshade=true;
+    break;
+   case 2:
+    app.iscones=true;app.isshade=true;
+    break;
+    case 3:
+    app.iscones=true;app.isshade=true;
+    break;
+    case 4:
+    app.iscrossweight=true;app.btnText='No.of Bobbin';
+    break;
+    case 5:
+    app.iscrossweight=true;app.btnText='No.of Bobbin';
+    break; 
+    case 8:
+    app.NumberText='Bobbin No.';app.isshade=true;app.iscount=false;
+    break;
+     case 7:
+    app.NumberText='Beam No.';app.isshade=true;app.iscount=false;
+    break;  
+
+
+  }
+  
+},
+
+     getmaterialpurchase:function(i){
+      var arr=i.split('/');
+// purchaseid=arr[0];
+// purchasedate=arr[1];
+      axios.post('/getmaterialpurchase/', {
+        purchaseno:arr[0],
+        purchasedate:arr[1],
+     
+     }).then(function(response){
+//
+//alert(response.data);
+
+     app.materialeachview = response.data;
+     app.myTable();
+     app.table=true;
+     //  app.materialtype='';
+     // app.grossweight='';
+     // app.netweight='';
+     // app.bags='';
+     // app.cones='';
+     // app.colorshade='';
+     // app.tip='';
+ 
+     });
+
+     },
+
+  }
+})    
+</script>
+{% endblock %}
+
+
+

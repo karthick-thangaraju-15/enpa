@@ -1,0 +1,696 @@
+{% extends 'dashboard/base.html' %}
+{% block head %}
+  <title>Factory Info</title>
+{% endblock %}
+
+ {% block body %}
+      <!-- Main Content -->
+      <div class="main-content" >
+        <section class="section">
+          <div class="section-body">
+            <div class="row">
+              <div class="col-12 col-md-12 col-lg-12">
+
+      
+                <div class="card">
+                  <div class="card-header">
+                    <h4 style="color: #fc544b">Factory Info</h4>
+                  </div>
+                  <div class="card-body">
+
+ 
+
+                        <div class="col-12 col-md-12" >
+                          <button type="button" style="float: right"  class="btn btn-warning" v-on:click="addsup">Add More</button>
+     <div class="table-responsive">
+      
+                      <table id="example"  class="table table-bordered table-md">
+                        <thead>
+                        <tr>
+                          
+                          <th>Contractor Name</th>
+                          <th>Contact</th>
+                          <th>Factory Name</th>
+                          <th>Factory Address</th>
+                          <th>Loom Count</th>
+                          
+                          <th>Action</th>
+
+                        
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr v-for="sup in factoryinfoview">
+                         
+                          <td>${ sup.name }$</td>
+                         <td>${ sup.contact }$</td>
+                          <td>${ sup.fname }$</td>
+                          <td>${ sup.faddress }$</td>
+                          <td>${ sup.floomcount }$</td>
+                          <td><a type="button"  class="btn btn-primary bt"  @click="editData(sup.cid)"><i class="fa fa-pencil" style="color:#fff"></i></a>
+                            <a type="button"  class="btn btn-danger"  @click="deleteData(sup.cid)"><i class="fa fa-trash" style="color:#fff"></i></a></td>
+                        </tr>
+                        </tbody> 
+                        
+                      </table>
+                     
+                    </div>
+</div>
+
+                  </div>
+                </div>
+               
+              </div>
+     
+            </div>
+          </div>
+        </section>
+
+
+                           <!----------------------model start---------------------->
+                   <div class="modal fade" id="myModal1">
+    <div class="modal-dialog" width="890px">
+      <div class="modal-content">
+          
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title" style="color:red;text-align:center">Add Factory </h4>
+        
+        </div>
+          <div class="modal-body">
+                   <validation-observer v-slot="{ invalid, handleSubmit }">
+                    <form @submit.prevent="handleSubmit(addsubmitData)">
+                       {% csrf_token %}  {% load widget_tweaks %}
+                    <div class="form-group">
+                     
+                      <div class="row " >
+
+ <input type="hidden"  class="form-control" id="">
+
+
+                        <div class="col-12 col-md-4">
+                           <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>Contractor</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fas fa-user"></i>
+                          </div>
+                        </div>
+                           <select  class="form-control" @change="onContractor($event)" name="names" id="contractor" v-model="name">
+                           <option value="defaults" disabled="">Select Contractor</option>
+
+                          <option v-for="view in factoryview" v-bind:value="view.pk" v-bind:data-foo="view.fields.address+'/'+view.fields.district"  v-bind:district="view.fields.district"  >${view.fields.name}$-${view.fields.contact}$</option>
+                        </select>
+                      </div>
+                        <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                        </div>
+
+
+
+
+
+
+
+
+                        <div class="col-12 col-md-6">
+                            <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>Address</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fa fa-map-marker"></i>
+                          </div>
+                        </div>
+                        <input type="text"  class="form-control" id="address" v-model="address">
+                      </div>
+                       <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                        </div>
+                        <div class="col-12 col-md-2">
+                            <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>District</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fa fa-map-marker"></i>
+                          </div>
+                        </div>
+                        <input type="text"  class="form-control" id="district" v-model="district">
+                      </div>
+                       <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                        </div>
+
+
+
+
+
+                 
+         
+                      </div>
+                       <div class="row">
+
+
+                       </div>
+
+
+                    </div>
+                      
+
+
+      
+ 
+  <div v-for="(input, index) in inputs">
+    <div class="card">
+      <div class="row" style="padding: 10px">
+  
+   <input type="hidden"  class="form-control"  name="fid"  v-model="fid">
+
+                        <div class="col-12 col-md-2">
+                            <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>Factory Name</label>
+                      <div class="input-group">
+                    
+                        <input type="text"  class="form-control" id="factory name" name="fname"  v-model="fname[index]">
+                      </div>
+                       <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                        </div>
+
+      <div class="col-12 col-md-5">
+                            <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>Address</label>
+                      <div class="input-group">
+                      
+                        <input type="text"  class="form-control" name="faddress" id="address" v-model="faddress[index]">
+                      </div>
+                       <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                        </div>
+
+                        <div class="col-12 col-md-2">
+                            <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>Zone</label>
+                      <div class="input-group">
+                      <select class="form-control "  name="fzone" id="zone"  v-model="fzone[index]">
+                        <option value="" disabled="">Select</option>
+                          <option value="South">South</option>
+                          <option value="North">North</option>
+                          <option value="East">East</option>
+                          <option value="West">West</option>
+                          
+                        </select>
+                     
+                      </div>
+                       <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                        </div>
+
+                        <div class="col-12 col-md-1">
+                            <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>K.M</label>
+                      <div class="input-group">
+                      
+                        <input type="text"  class="form-control" name="fkm" id="address"  v-model="fkm[index]">
+                      </div>
+                       <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                        </div>
+
+                             <div class="col-12 col-md-1">
+                            <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>L.Count</label>
+                      <div class="input-group">
+                      
+                        <input type="text"  class="form-control" name="floomcount" id="loom count"  v-model="floomcount[index]">
+                      </div>
+                       <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                        </div>
+<div class="col-12 col-md-1">
+                         <button type="button" 
+        class="btn btn-danger"
+        @click="deleteRow(inputs[index])"
+      ><i class="fa fa-trash"></i></button>
+
+</div>
+
+  
+ 
+  </div>
+  <div class="row" v-for="(inputchild, indexchild) in inputschild" style="padding: 10px;">
+
+
+                        <div class="col-12 col-md-1">
+                            <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>L.no.</label>
+                      <div class="input-group">
+                    
+                        <input type="text"  class="form-control" id="name" name="lno"  v-model="lno[indexchild]">
+                      </div>
+                       <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                        </div>
+
+      <div class="col-12 col-md-5">
+                            <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>L.Name</label>
+                      <div class="input-group">
+                      
+                        <input type="text"  class="form-control" name="lname" id="name" v-model="lname[indexchild]">
+                      </div>
+                       <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                        </div>
+
+                        <div class="col-12 col-md-3">
+                            <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>Category</label>
+                      <div class="input-group">
+                     
+                       <select  class="form-control" name="lcategory" id="Category" v-model="lcategory[indexchild]">
+                          <option value="" disabled="">Select</option>
+                          <option value="Plain">Plain</option>
+                          <option value="DropBox">DropBox</option>
+                          <option value="Under Pick">Under Pick</option>
+                          <option value="Over Pick">Over Pick</option>
+                          <option value="Under Pick DropBox">Under Pick DropBox</option>
+
+                         </select>
+                      </div>
+                       <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                        </div>
+
+
+                             <div class="col-12 col-md-2">
+                            <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>Width</label>
+                      <div class="input-group">
+                      
+                        <input type="number"  class="form-control" name="age" id="loom count"  v-model="lage[indexchild]">
+                      </div>
+                       <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                        </div>
+                       <!--           <div class="col-12 col-md-2">
+                            <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>Date Of Installation</label>
+                      <div class="input-group">
+                      
+                        <input type="date"  class="form-control" name="Date" id="Installation Date"  v-model="ldate[indexchild]">
+                      </div>
+                       <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                        </div> -->
+<div class="col-12 col-md-1">
+                         <button type="button" 
+        class="btn btn-warning"
+        @click="deleteloomRow(inputschild[indexchild])"
+      ><i class="fa fa-close"></i></button>
+
+</div>
+
+
+
+
+</div>
+
+ <div class="row" style="padding: 25px">
+  <button type="button" class="btn btn-success" @click="loomcount()">Add Loom</button>
+
+                       </div>
+</div>
+  <br>
+  </div>
+  <div class="row">
+  <button type="button" v-if="addfactory" class="btn btn-warning" @click="factcount()">Add Factory</button>
+
+                       </div>
+   <div class="modal-footer">
+           <button type="button" class="btn btn-primary" onClick="$('#myModal1').modal('hide');">Cancel</button>
+          <button type="submit" v-bind:disabled="invalid" v-if="add "class="btn btn-danger" >Submit</button>
+          <button type="submit" v-bind:disabled="invalid" v-if="update "class="btn btn-danger" >Update</button>
+        </div>
+
+
+
+
+                  </form>
+                </validation-observer>
+              </div>
+                 </div>
+    </div>
+  </div><!-------------------model close------------------------------------------>
+
+      </div>
+
+       {% endblock %}
+
+ {% block foot %}
+
+         <script>
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'X-CSRFToken'
+</script>
+         <script>
+var app = new Vue({
+  delimiters: ['${', '}$'],
+  el: '#app',
+  data: {
+      name: 'defaults',
+      
+      mobile: '',
+      district:'',
+      address:'',
+      fcount:'',
+      inputs: [],
+      inputschild: [],
+      factoryview:[],
+      factoryinfoview:[],
+      loomview:[],
+      fname:[],
+      faddress:[],
+      fid:'',
+      
+      fzone:[],
+      fkm:[],
+      floomcount:[],
+      lno:[],
+      lname:[],
+      lage:[],
+      
+      lcategory:[],
+      add:true,
+      update:false,
+      addfactory:true,
+      idcval:'',
+      fzone1:''
+
+
+  },
+  mounted: function () {
+   this.getfactoryinfo();
+  },
+
+  methods: {
+     addInput() {
+      this.inputs.push(this.inputs.length+1)
+    },
+    deleteRow(index) {
+     
+  app.addfactory=true;
+  var index=app.inputs.indexOf(index);
+      this.inputs.splice(index, 1);
+    },
+
+    factcount()
+    {
+      app.addfactory=false;
+       this.inputs.push(this.inputs.length+1)
+    },
+
+      loomcount()
+    {
+      arr=this.inputschild.length;
+      app.lcategory[arr]='';
+       this.inputschild.push(this.inputschild.length+1)
+    },
+        deleteloomRow(indexchild) {
+     
+
+  var index=app.inputschild.indexOf(indexchild);
+      this.inputschild.splice(index, 1);
+    },
+         myTable(){
+        $(document).ready( function () {
+              $('#example').DataTable({
+      
+      dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ],
+        "scrollY":        "500px",
+        "scrollCollapse": true,
+        "retrieve": true,
+        "paging":         false
+    });
+          });
+      },
+      editData:function(id){
+  
+     axios.post('/editfactory/'+id+'', {
+      
+     
+     }).then(function(response){
+      
+       //alert(JSON.stringify(response.data));
+app.resetform();
+     var myObj=response;
+     app.getcontractor();
+      app.name=myObj.data[0].contractorid;
+      app.district=myObj.data[0].district;
+      app.address=myObj.data[0].address;
+      app.fname[0]=myObj.data[0].fname;
+      app.faddress[0]=myObj.data[0].faddress;
+      app.fkm[0]=myObj.data[0].fkm;
+      app.floomcount[0]=myObj.data[0].floomcount;
+      app.fzone[0]=myObj.data[0].fzone;
+      app.fid=myObj.data[0].cid;
+      app.inputs.push(app.inputs.length+1)
+
+      
+      app.addfactory=false;
+      app.add=false;
+      app.update=true;
+     
+              axios.post('/editloom/'+id+'', {
+      
+     
+      }).then(function(response){
+
+// //alert(JSON.stringify(response));
+
+   app.inputschild = response.data;
+
+    var myObj=response;
+
+  for (i in myObj.data) {
+ 
+     app.lno[i]= myObj.data[i].fields.lno;
+     app.lname[i]= myObj.data[i].fields.lname;
+     app.lage[i]= myObj.data[i].fields.lage;
+     
+     app.lcategory[i]= myObj.data[i].fields.lcategory;
+ 
+ }
+
+
+    $('#myModal1').modal('show');
+      });
+     });
+
+},
+      resetform:function()
+      {
+      app.inputs= [];
+      app.inputschild= [];
+
+      app.name= 'defaults';
+      
+      app.mobile= '';
+      app.district='';
+      app.address='';
+      app.fid=[];
+      app.fname=[];
+      app.faddress=[];
+      app.fzone[0]='North';
+      app.fkm=[];
+      app.floomcount=[];
+      app.lno=[];
+      app.lname=[];
+      app.lage=[];
+      
+      app.lcategory=[];
+      app.add=true;
+      app.update=false;
+      app.addfactory=true;
+
+      },
+      onChange:function(event){
+      var disname=event.target.value;
+            axios.post('/districtget/'+disname+'', {
+     
+     }).then(function(response){
+//alert(JSON.stringify(response.data));
+     app.District = response.data;
+      
+     });
+    },
+       addsup:function(){
+      app.resetform();
+      $('#myModal1').modal('show');
+     app.getcontractor();
+    },
+
+
+
+     getcontractor: function(){
+
+ axios.get('/getcontractor', {
+     
+     }).then(function(response){
+//
+     //alert(JSON.stringify(response.data));
+     app.factoryview = response.data;
+   
+     
+      
+     });
+  
+    },
+
+
+      getfactoryinfo: function(){
+
+  axios.get('/getfactory', {
+     
+     }).then(function(response){
+
+     //alert(JSON.stringify(response.data));
+     app.factoryinfoview = response.data;
+      app.myTable();
+      //app.resetform();
+      
+      });
+    },
+         onContractor(e){
+          //alert(JSON.stringify(this.name));
+          if(e.target.options.selectedIndex > -1) {
+            array=e.target.options[e.target.options.selectedIndex].dataset.foo;
+            arr=array.split('/');
+
+            app.address=arr[0];
+            app.district=arr[1];
+        }
+
+     
+    },
+
+
+               addsubmitData:function(){
+                //alert(app.fid);
+if(app.fid!='')
+{
+   axios.post('/updatefactory/', {
+
+      cid:app.name,
+      fname:app.fname[0],
+      fid:app.fid,
+      faddress:app.faddress[0],
+      fzone:app.fzone[0],
+      fkm:app.fkm[0],
+      flcount:app.floomcount[0],
+      lno:app.lno,
+      lname:app.lname,
+      lapp:app.lage,
+     
+      lcategory:app.lcategory,
+
+
+     
+     }).then(function(response){
+//      
+    swal("Update Successfully", "", "success");   
+   app.getfactoryinfo();
+$('#myModal1').modal('hide');
+    
+    });
+}else
+{
+  axios.post('/addfactory/', {
+
+      cid:app.name,
+      fname:app.fname[0],
+      faddress:app.faddress[0],
+      fzone:app.fzone[0],
+      fkm:app.fkm[0],
+      flcount:app.floomcount[0],
+      lno:app.lno,
+      lname:app.lname,
+      lapp:app.lage,
+     
+      lcategory:app.lcategory,
+
+
+     
+     }).then(function(response){
+//      
+   //alert(JSON.stringify(response));  
+swal({
+  title: "Factory Added Successfully",
+  text: "Add More Factory?",
+  icon: "success",
+ 
+  buttons: true,
+  dangerMode: true,
+  buttons: ['No','Yes']
+})
+.then((willDelete) => {
+  if (willDelete) {
+
+   app.resetform();
+  } else {
+    
+   $('#myModal1').modal('hide');
+   app.getfactoryinfo();
+   
+  }
+}); 
+    
+    });
+}
+
+
+     },
+     deleteData:function(id){
+  
+
+swal({
+  title: "Are you sure?",
+  text: "Once deleted, you will not be able to recover this",
+  icon: "warning",
+  buttons: true,
+  dangerMode: true,
+})
+.then((willDelete) => {
+  if (willDelete) {
+       axios.post('/deletefactory/'+id+'', {
+      
+     
+     }).then(function(response){
+   swal("Deleted Successfully", "", "success");   
+   app.getfactoryinfo();
+     });
+  } else {
+    
+  }
+});
+
+
+
+
+
+
+},
+
+
+
+
+}
+})    
+</script>
+{% endblock %}
+

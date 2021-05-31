@@ -1,0 +1,757 @@
+  {% extends 'dashboard/base.html' %}
+{% block head %}
+  <title>Sizing</title>
+{% endblock %}
+
+ {% block body %}
+      <!-- Main Content -->
+      <div class="main-content" >
+        <section class="section">
+          <div class="section-body">
+            <div class="row">
+              <div class="col-12 col-md-12 col-lg-12">
+
+      
+                <div class="card">
+                  <div class="card-header">
+                    <h4 style="color: #fc544b">Sizing Info</h4>
+                  </div>
+                  <div class="card-body">
+
+ 
+
+                        <div class="col-12 col-md-12" >
+                          <button type="button" style="float: right"  class="btn btn-warning" v-on:click="addsup">Add More</button>
+     <div class="table-responsive">
+      
+                      <table id="example"  class="table table-bordered table-md">
+                        <thead>
+                        <tr>
+                          
+                          <th>Name</th>
+                          <th>Email</th>
+                          <th>Mobile</th>
+                          <th>Address</th>
+                          <th>District</th>
+                          <th>Zone</th>
+                          <th>Action</th>
+
+                        
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr v-for="sup in sizingview">
+                         
+                          <td>${ sup.fields.name }$</td>
+                          <td>${ sup.fields.email }$</td>
+                         <td>${ sup.fields.contact }$</td>
+                          <td>${ sup.fields.address }$</td>
+                          <td>${ sup.fields.district }$</td>
+                          <td>${ sup.fields.zone }$</td>
+                          <td><a type="button"  class="btn btn-primary bt"  @click="editData(sup.pk)"><i class="fa fa-pencil" style="color:#fff"></i></a>
+                            <a type="button"  class="btn btn-danger"  @click="deleteData(sup.pk)"><i class="fa fa-trash" style="color:#fff"></i></a></td>
+                        </tr>
+                        </tbody> 
+                        
+                      </table>
+                     
+                    </div>
+</div>
+
+                  </div>
+                </div>
+               
+              </div>
+     
+            </div>
+          </div>
+        </section>
+
+
+                           <!----------------------model start---------------------->
+                   <div class="modal fade" id="myModal1">
+    <div class="modal-dialog" width="890px">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title" style="color:red;text-align:center">Add Sizing </h4>
+        
+        </div>
+          <div class="modal-body">
+                   <validation-observer v-slot="{ invalid, handleSubmit }">
+                    <form @submit.prevent="handleSubmit(addsubmitData)">
+                       {% csrf_token %}  {% load widget_tweaks %}
+                    <div class="form-group">
+                     
+                      <div class="row " >
+
+ <input type="hidden"  class="form-control" id="" v-model="id">
+
+
+                        <div class="col-12 col-md-6">
+                           <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>Name Of the Sizing</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fas fa-user"></i>
+                          </div>
+                        </div>
+                        <input type="text"  class="form-control" name="company" id="Name Of the sizing" v-model="company">
+                      </div>
+                        <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                        </div>
+
+                              <div class="col-12 col-md-6">
+                           <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>Name Of the Contact Person</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fas fa-user"></i>
+                          </div>
+                        </div>
+                        <input type="text"  class="form-control" name="name" id="Name Of the sizing" v-model="name">
+                      </div>
+                        <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                        </div>
+
+
+                       
+
+                         <div class="col-12 col-md-6">
+                            <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>Mobile</label>
+                       <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fa fa-user-circle"></i>
+                          </div>
+                        </div>
+                        <input type="text"  class="form-control"   v-model="mobile" id="mobile" >
+                      </div>
+                       <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                        </div>
+
+
+
+
+                        <div class="col-12 col-md-6">
+                            <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>Email</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fa fa-map-marker"></i>
+                          </div>
+                        </div>
+                        <input type="email"  class="form-control" id="Email" v-model="email">
+                      </div>
+                       <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                        </div>
+
+
+                        <div class="col-12 col-md-6">
+                            <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>Address</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fa fa-map-marker"></i>
+                          </div>
+                        </div>
+                        <input type="text"  class="form-control" id="address" v-model="address">
+                      </div>
+                       <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                        </div>
+
+
+
+                        <div class="col-12 col-md-6">
+                            <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>Taluk</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fa fa-map-marker"></i>
+                          </div>
+                        </div>
+                        <input type="text"  class="form-control" id="taluk" v-model="taluk">
+                      </div>
+                       <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                        </div>
+
+                               <datalist id="state">
+                          <option value="Tamilnadu">Tamilnadu</option>
+                              <option value="Kerala">Kerala</option>
+
+                              <option value="Andhra Pradesh">Andhra Pradesh</option>
+
+                              <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+
+                              <option value="Assam">Assam</option>
+
+                              <option value="Bihar">Bihar</option>
+
+                              <option value="Chhattisgarh">Chhattisgarh</option>
+
+                              <option value="Goa">Goa</option>
+
+                              <option value="Gujarat">Gujarat</option>
+
+                              <option value="Haryana">Haryana</option>
+
+                              <option value="Himachal pradesh">Himachal pradesh</option>
+
+                              <option value="Jammu & Kashmir">Jammu & Kashmir</option>
+
+                              <option value="Jharkhand">Jharkhand</option>
+
+                              <option value="Karnataka">Karnataka</option>
+
+                              <option value="Madhya Pradesh">Madhya Pradesh</option>
+
+                              <option value="Maharashtra">Maharashtra</option>
+
+                              <option value="Manipur">Manipur</option>
+
+                              <option value="Meghalaya">Meghalaya</option>
+
+                              <option value="Mizoram">Mizoram</option>
+
+                              <option value="Nagaland">Nagaland</option>
+
+                              <option value="Odisha">Odisha</option>
+
+                              <option value="Punjab">Punjab</option>
+
+                              <option value="Rajastan">Rajastan</option>
+
+                              <option value="Sikkim">Sikkim</option>
+
+                              <option value="Telangana">Telangana</option>
+
+                              <option value="Tripura">Tripura</option>
+
+                              <option value="Uttarkhand">Uttarkhand</option>
+
+                              <option value="Uttar Pradesh">Uttar Pradesh</option>
+
+                              <option value="West Bengal">West Bengal</option>
+                              <option value="" disabled="" style="color: #4caf50">Select Union Territories</option>
+
+                               <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+
+                              <option value="Chandigarh">Chandigarh</option>
+
+                              <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu</option>
+
+                              <option value="Delhi">Delhi</option>
+
+                              <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+
+                              <option value="Ladakh">Ladakh</option>
+
+                              <option value="Lakshadweep">Lakshadweep</option>
+
+                              <option value="Puducherry">Puducherry</option>
+                     
+                        </datalist>
+
+                         <div class="col-12 col-md-6">
+                          <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>State</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fa fa-location-arrow"></i>
+                          </div>
+                        </div>
+                        <input type="text"  class="form-control " id="State" @change="onChange($event)"  v-model="state" list="state">
+                      </div>
+                       <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                        </div>
+
+
+ <datalist id="districts">
+ <option v-for="dis in District">${dis.fields.District}$</option>
+  </datalist>
+                         <div class="col-12 col-md-6">
+                          <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>District</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fa fa-location-arrow"></i>
+                          </div>
+                        </div>
+                        <input type="text"  class="form-control " id="District" v-model="districtlist" list="districts">
+                      </div>
+                       <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                          <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>Pincode</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fa fa-location-arrow"></i>
+                          </div>
+                        </div>
+                        <input type="text"  class="form-control " id="pincode" v-model="pincode">
+                      </div>
+                       <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                        </div>
+
+                          <div class="col-12 col-md-6">
+                          <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>Zone</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fa fa-location-arrow"></i>
+                          </div>
+                        </div>
+                         <select class="form-control " id="zone" v-model="zone">
+                          <option value="" disabled="">Select</option>
+                          <option>South</option>
+                          <option>North</option>
+                          <option>East</option>
+                          <option>West</option>
+                          
+                        </select>
+                      </div>
+                       <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                        </div>
+
+                                  <div class="col-12 col-md-6">
+                          <validation-provider rules="" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>GST No.</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fa fa-location-arrow"></i>
+                          </div>
+                        </div>
+                        <input type="text"  class="form-control " id="gst no" v-model="gstno">
+                      </div>
+                       <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                        </div>
+
+                 
+                       
+
+                    
+
+                    
+
+                              <!--   <div class="col-12 col-md-6" v-if="addmemberreq">
+                               <label class="form-label">Registration fee paid status</label>
+                      <div class="selectgroup w-100">
+                        <label class="selectgroup-item">
+                          <input type="radio"  v-model="radio2" v-on:change="paidst" v-on:click ="paidst"  value="Yes" class="selectgroup-input-radio" checked="">
+                          <span class="selectgroup-button">Yes</span>
+                        </label>
+                        <label class="selectgroup-item">
+                          <input type="radio"  v-model="radio2"  v-on:change="paidst" value="No" class="selectgroup-input-radio">
+                          <span class="selectgroup-button" >No</span>
+                        </label>
+                      
+                       
+                      </div>
+                        </div> -->
+
+               
+
+                  
+
+               
+
+
+
+                       <!--  <div class="col-12 col-sm-6" v-if="addmemberreq">
+                          <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>If payment made in bulk, pls specify the Names of the participants or NIL</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fa fa-upload"></i>
+                          </div>
+                        </div>
+                        <input type="text"  class="form-control phone-number"  id="payment made" v-model="participants">
+                      </div>
+                       <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                        </div> -->
+
+
+
+
+
+                       
+                       
+                        
+                        
+                      </div>
+                                            <div v-for="(input, index) in inputs">
+      <div class="row" style="padding: 10px">
+  
+   
+
+                        <div class="col-12 col-md-4">
+                            <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>Bank Name</label>
+                      <div class="input-group">
+                    
+                        <input type="text"  class="form-control" id="Bank name" name="bname"  v-model="bname[index]" >
+                      </div>
+                       <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                        </div>
+
+      <div class="col-12 col-md-4">
+                            <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>A/c No.</label>
+                      <div class="input-group">
+                      
+                        <input type="text"  class="form-control" name="a/c No" id="a/c No" v-model="acno[index]">
+                      </div>
+                       <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                        </div>
+
+                        <div class="col-12 col-md-3">
+                            <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                           <label>IFSC Code</label>
+                      <div class="input-group">
+                     
+                        <input type="text"  class="form-control"  name="ifsc" id="ifsc"  v-model="ifsc[index]">
+                      </div>
+                       <div class="error" v-show="errors">${ errors[0] }$</div>
+                      </validation-provider>
+                        </div>
+
+                    
+<div class="col-12 col-md-1">
+                         <button type="button" 
+        class="btn btn-danger"
+        @click="deleteRow(inputs[index])"
+      ><i class="fa fa-trash"></i></button>
+
+</div>
+
+  
+ 
+  </div>
+</div>
+
+    <div class="row">
+  <button type="button" v-if="addfactory" class="btn btn-success" @click="factcount()">Add Bank</button>
+
+                       </div>
+                    </div>
+                       <div class="modal-footer">
+           <button type="button" class="btn btn-primary" onClick="$('#myModal1').modal('hide');">Cancel</button>
+          <button type="submit" v-bind:disabled="invalid" v-if="add "class="btn btn-danger" >Add</button>
+          <button type="submit" v-bind:disabled="invalid" v-if="update "class="btn btn-danger" >Update</button>
+        </div>
+                  </form>
+                </validation-observer>
+              </div>
+                 </div>
+    </div>
+  </div><!-------------------model close------------------------------------------>
+
+      </div>
+
+       {% endblock %}
+
+
+         {% block foot %}
+         <script>
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'X-CSRFToken'
+</script>
+         <script>
+var app = new Vue({
+  delimiters: ['${', '}$'],
+  el: '#app',
+  data: {
+      company: '',
+      name: '',
+      email: '',
+      mobile: '',
+      id: '',
+      address:'',
+      taluk:'',
+      state:'',
+      pincode:'',
+      zone:'',
+      gstno:'',
+      inputs: [],
+      bname:[],
+      acno:[],
+      ifsc:[],
+      District:[],
+      districtlist:'',
+      sizingview:[],
+      add:true,
+      update:false,
+      addfactory:true,
+
+  },
+  mounted: function () {
+   this.getsizings();
+  },
+
+  methods: {
+            deleteRow(index) {
+     
+  app.addfactory=true;
+  var index=app.inputs.indexOf(index);
+      this.inputs.splice(index, 1);
+    },
+
+    factcount()
+    {
+      app.addfactory=true;
+       this.inputs.push(this.inputs.length+1)
+    },
+        
+         myTable(){
+        $(document).ready( function () {
+              $('#example').DataTable({
+      
+      dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ],
+        "scrollY":        "500px",
+        "scrollCollapse": true,
+        "retrieve": true,
+        "paging":         false
+    });
+          });
+      },
+      resetform:function()
+      {
+      app.company= '';
+      app.name= '';
+      app.email= '';
+      app.mobile= '';
+      app.id= '';
+      app.address='';
+      app.taluk='';
+      app.state='';
+      app.pincode='';
+      app.zone='';
+      app.gstno='';
+      app.District=[];
+      app.districtlist='';
+      
+      app.inputs= [];
+      app.bname=[];
+      app.acno=[];
+      app.ifsc=[];
+      
+      app.add=true;
+      app.update=false;
+      },
+       addsup:function(){
+        app.resetform();
+      $('#myModal1').modal('show')
+    },
+          onChange:function(event){
+      var disname=event.target.value;
+            axios.post('/districtget/'+disname+'', {
+     
+     }).then(function(response){
+//alert(JSON.stringify(response.data));
+     app.District = response.data;
+      
+     });
+    },
+          addsubmitData:function(){
+if(app.id!='')
+{
+  url='/updatesizing/';
+  msg="Updated Successfully";
+}else
+{
+  url='/addsizing/';
+  msg="Added Successfully";
+}
+
+      axios.post(url,{
+        company:app.company,
+          name: app.name,
+      email: app.email,
+      contact: app.mobile,
+      
+      address:app.address,
+      taluk:app.taluk,
+      district:app.districtlist,
+      state:app.state,
+      pincode:app.pincode,
+      zone:app.zone,
+      gstno:app.gstno,
+      id:app.id,
+      bname:app.bname,
+      acno:app.acno,
+      ifsc:app.ifsc,
+         
+      
+       }).then(function(response){
+        $('#myModal1').modal('hide');
+        swal(msg, "", "success"); 
+        app.getsizings();
+    }).catch(err => {
+    // what now?
+    console.log(err);
+})
+     },
+
+
+     getsizings: function(){
+
+ axios.get('/getsizing', {
+     
+     }).then(function(response){
+//
+
+     app.sizingview = response.data;
+     app.myTable();
+     app.resetform();
+     });
+  
+    },
+
+editData:function(id){
+  
+     axios.post('/editsizing/'+id+'', {
+      
+     
+     }).then(function(response){
+      
+       var yourString=JSON.stringify(response.data);
+
+      var result = yourString.slice(1,-1);
+
+      var obj = JSON.parse(result);
+
+   //alert(obj["pk"]);
+      app.id= obj["pk"];
+      app.name= obj["fields"]["name"];
+      app.company= obj["fields"]["company"];
+      app.email= obj["fields"]["email"];
+      app.mobile= obj["fields"]["contact"];
+     
+      app.address=obj["fields"]["address"];
+      app.state=obj["fields"]["state"];
+      app.pincode=obj["fields"]["pincode"];
+      app.districtlist=obj["fields"]["district"];
+      app.taluk=obj["fields"]["taluk"];
+      app.zone=obj["fields"]["zone"];
+      app.gstno=obj["fields"]["gstno"];
+    // Define recursive function to print nested values
+      app.add=false;
+      app.update=true;
+          axios.post('/editsizingbank/'+id+'', {
+      
+     
+     }).then(function(response){
+
+//alert(JSON.stringify(response));
+
+    app.inputs = response.data;
+
+    var myObj=response;
+
+   for (i in myObj.data) {
+ 
+ 
+    app.bname[i]= myObj.data[i].fields.bankname;
+    app.acno[i]= myObj.data[i].fields.accountno;
+    app.ifsc[i]= myObj.data[i].fields.ifsccode;
+ 
+}
+
+
+    $('#myModal1').modal('show');
+     });
+     });
+
+},
+deleteData:function(id){
+
+  swal({
+  title: "Are you sure?",
+  text: "Once deleted, you will not be able to recover this",
+  icon: "warning",
+  buttons: true,
+  dangerMode: true,
+})
+.then((willDelete) => {
+  if (willDelete) {
+       axios.post('/deletesizing/'+id+'', {
+      
+     
+     }).then(function(response){
+   swal("Deleted Successfully", "", "success");   
+   app.getsizings();
+     });
+  } else {
+    
+  }
+});
+
+  
+    
+
+},
+
+// addupdateData:function(){
+
+
+//       axios.post(,{
+//           name: app.name,
+//       email: app.email,
+//       contact: app.mobile,
+//       id:app.id,
+//       address:app.address,
+//       taluk:app.taluk,
+//       district:app.districtlist,
+//       state:app.state,
+//       pincode:app.pincode,
+//       zone:app.zone,
+         
+      
+//        }).then(function(response){
+//         $('#myModal1').modal('hide');
+//         app.getsizings();
+//     }).catch(err => {
+//     // what now?
+//     console.log(err);
+// })
+//      },
+ 
+  }
+})    
+</script>
+{% endblock %}
+
+
+
